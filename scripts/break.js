@@ -89,14 +89,11 @@ function startSimulation() {
     if (simulationStarted) {
         return;
     }
-    // create an engine
+    
     const engine = Engine.create();
 
     const mouseConstraint = MouseConstraint.create(engine);
     World.add(engine.world, mouseConstraint);
-
-    // const ground = Bodies.rectangle(400, 610, 5000, 60, { isStatic: true });
-    // World.add(engine.world, ground);
 
     const newBodies = bodiesFromDocument();
     World.add(engine.world, newBodies);
@@ -130,8 +127,3 @@ function startSimulation() {
     window.requestAnimationFrame(simulationStep);
     simulationStarted = true;
 }
-
-//   window.addEventListener('DOMContentLoaded', (event) => {
-//     console.log('DOM fully loaded and parsed');
-//     startSimulation();
-// });
