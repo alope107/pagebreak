@@ -1,5 +1,5 @@
 // Rename core Matterjs modules for easy use.
-let Engine = Matter.Engine,
+const Engine = Matter.Engine,
 Render = Matter.Render,
 World = Matter.World,
 Bodies = Matter.Bodies,
@@ -48,7 +48,7 @@ function rectangleFromElement(element, isStatic) {
                                       elemWidth, elemHeight);
 
 
-    const rect = Bodies.rectangle(bodyPos.x, bodyPos.y, elemWidth, elemHeight,
+    return Bodies.rectangle(bodyPos.x, bodyPos.y, elemWidth, elemHeight,
                                   {
                                       isStatic: isStatic,
                                       render: { 
@@ -57,7 +57,6 @@ function rectangleFromElement(element, isStatic) {
                                                 height: elemHeight
                                             }
                                   });
-    return rect;
 }
 
 // Creates a rectangle body for each DOM element of class "dynamic"
@@ -81,8 +80,11 @@ function bodiesFromDocument() {
 
 // Takes matterjs body and updates its corresponding HTML element
 // with styles corresponding to the body's location and rotation.
-// Body must contain element in the render object.
 function updateBodyElement(body) {
+    // If the body has no element, there's nothing to update.
+    if (body.render == null || body.render.element == null) {
+        return
+    }
     const element = body.render.element;
 
     // Transform from Matterjs coordinates to CSS coordinates
@@ -100,37 +102,35 @@ function updateBodyElement(body) {
 // Creates rectangular physics bodies for each DOM element of class "dynamic"
 // or "static". Runs a physics simulation and updates CSS of the DOM elements
 // to match translation and rotation of the physics objects.
-function startSimulation() {
+// By default each physics step assumes 16 ms has passed (~60 fps)
+function startSimulation(update_ms=16) {
     // Only start the simulation once
     if (simulationStarted) {
         return;
     }
+    simulationStarted = true;
     
     const engine = Engine.create();
 
     const mouseConstraint = MouseConstraint.create(engine);
     World.add(engine.world, mouseConstraint);
 
-    const newBodies = bodiesFromDocument();
-    World.add(engine.world, newBodies);
+    World.add(engine.world, bodiesFromDocument());
 
     // Runs a step of the simulation at each animation frame.
     // Updates the engine and the CSS of all DOM elements tied to
     // a physics body.
     function simulationStep() {
-        // Update the engine 16 ms (~60 FPS)
-        Engine.update(engine, 16);
+        Engine.update(engine, update_ms);
 
         for (let body of engine.world.bodies) {
-            if (body.render != null && body.render.element != null) {
-                updateBodyElement(body);
-            }
+            updateBodyElement(body);
         }
+
         // Continously re-register for each frame
         window.requestAnimationFrame(simulationStep);
     }
 
     // Begin stepping through the simulation on the next frame
     window.requestAnimationFrame(simulationStep);
-    simulationStarted = true;
 }
