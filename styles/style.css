@@ -13,3 +13,8 @@ textarea {
     height: 80px;
     background-color: aqua;
 }
+
+input[type="radio"] {
+    width: 20px;
+    height: 20px;
+}
