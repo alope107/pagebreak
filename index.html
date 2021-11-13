@@ -1,24 +1,38 @@
+<!DOCTYPE html>
 <head>
+    <meta charset="utf-8">
+    <title>Pagebreak</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.14.2/matter.js"></script>
     <script src="./scripts/break.js"></script>
     <link rel="stylesheet" href="./styles/style.css">
 </head>
 <body>
-  <div><button class="dynamic" onclick="startSimulation()">Break</button></div>
-  <div><form>
+  <button class="dynamic" onclick="startSimulation()">Break!</button>
+
+  <form>
     <input class="dynamic" type="radio" name="radio-triple">
     <input class="dynamic" type="radio" name="radio-triple">
     <input class="dynamic" type="radio" name="radio-triple">
-  </form></div>
-  <div><input class="dynamic" type="text" value="Ada">
-  <input class="dynamic" type="text" value="Devs"></div>
-  <progress class="dynamic" value="32" max="100"> 32% </progress>
-  <div><textarea class="dynamic" rows="7" cols="40">
-    Hello~~~
-  </textarea></div>
-    <div><video class="dynamic" id='box' controls autoplay 
-      width="560" height="315" poster="http://media.w3.org/2010/05/sintel/poster.png">
+  </form>
+
+  <input class="dynamic" type="text" value="Ada">
+  <input class="dynamic" type="text" value="Devs">
+
+  <div>
+    <progress class="dynamic" value="32" max="100">32%</progress>
+  </div>
+
+  <div>
+    <textarea class="dynamic" rows="7" cols="40">Hello~~~</textarea>
+  </div>
+
+  <div>
+    <video class="dynamic" id='box' controls autoplay width="560" height="315"
+           poster="http://media.w3.org/2010/05/sintel/poster.png">
       <source id='mp4' src="http://media.w3.org/2010/05/sintel/trailer.mp4" type='video/mp4'/>
-    </video></div>
+    </video>
+  </div>
+
   <p class="static">Try pressing the break button~~~ Who knows, something fun might happen!!</p>
 </body>
