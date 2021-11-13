@@ -1,16 +1,16 @@
 // Rename core Matterjs modules for easy use.
-var Engine = Matter.Engine,
+let Engine = Matter.Engine,
 Render = Matter.Render,
 World = Matter.World,
 Bodies = Matter.Bodies,
 MouseConstraint = Matter.MouseConstraint;
 
-var simulationStarted = false;
+let simulationStarted = false;
 
 // Returns the offset of an element relative to the document.
 // Taken from https://plainjs.com/javascript/styles/get-the-position-of-an-element-relative-to-the-document-24/
 function offset(el) {
-    var rect = el.getBoundingClientRect(),
+    const rect = el.getBoundingClientRect(),
     scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
     scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
@@ -79,6 +79,22 @@ function bodiesFromDocument() {
     return bodies;
 }
 
+// Takes matterjs body and updates its corresponding HTML element
+// with styles corresponding to the body's location and rotation.
+// Body must contain element in the render object.
+function updateBodyElement(body) {
+    const element = body.render.element;
+
+    // Transform from Matterjs coordinates to CSS coordinates
+    const cssCoord = centroidToTopLeft(body.position.x, body.position.y, 
+                                        body.render.width, body.render.height);
+    
+    element.style.position = "absolute";
+    element.style.left = Math.floor(cssCoord.left);
+    element.style.top = Math.floor(cssCoord.top);
+    element.style.transform = `rotate(${body.angle}rad)`;
+}
+
 
 // Begins running simulation and rendering.
 // Creates rectangular physics bodies for each DOM element of class "dynamic"
@@ -107,16 +123,7 @@ function startSimulation() {
 
         for (let body of engine.world.bodies) {
             if (body.render != null && body.render.element != null) {
-                const element = body.render.element;
-
-                // Transform from Matterjs coordinates to CSS coordinates
-                const cssCoord = centroidToTopLeft(body.position.x, body.position.y, 
-                                                   body.render.width, body.render.height);
-                
-                element.style.position = "absolute";
-                element.style.left = Math.floor(cssCoord.left);
-                element.style.top = Math.floor(cssCoord.top);
-                element.style.transform = "rotate(" + body.angle + "rad)";
+                updateBodyElement(body);
             }
         }
         // Continously re-register for each frame
